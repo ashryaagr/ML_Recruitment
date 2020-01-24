@@ -69,8 +69,6 @@ Youtube videos  - good, intuitive, in-depth
 
 # Task 2
 
-DEADLINE :: 20<sup>th</sup> June 2019
-
 
 ## Solve fill and solve neural_net.py file
 
