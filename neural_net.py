@@ -74,13 +74,15 @@ def activation(z, derivative=False):
     pontwize activation on each element of the input z
     """
     if derivative:
-        pass
+        # pass
         # TODO
         # return the derivative of the sigmoid activation function
+        return np.exp(-z) / (1 + np.exp(-z))**2
     else:
-        pass
+        #mpass
         # TODO
         # return the normal sigmoid activation function
+        return 1 / 1 + np.exp(-z)
 
 def cost_function(y_true, y_pred):
     """
@@ -111,6 +113,7 @@ def cost_function_prime(y_true, y_pred):
     """
     # TODO
     # Calculate the derivative of the cost function
+    cost_prime = y_pred - y_true
     return cost_prime
 
 class NeuralNetwork(object):
@@ -159,7 +162,7 @@ class NeuralNetwork(object):
         (2,4) for weights connecting layers 3 (4) and 4(2)
         Each matrix will be initialized with random values
         """
-        # self.weights =
+        self.weights = [np.random.randn(self.size[i], self.size[i-1]) * np.sqrt(1 / self.size[i-1]) for i in range(1, len(self.size))]
 
     def forward(self, input):
         '''
@@ -222,13 +225,13 @@ class NeuralNetwork(object):
         #TODO
         # Recursively calculate delta for each layer from the previous layer
         for l in range(len(deltas) - 2, -1, -1):
-            pass
+            # pass
             # deltas of layer l depend on the weights of layer l and l+1 and on the sigmoid derivative of the pre-activations of layer l
             # Note that we use a dot product when multipying the weights and the deltas
             # Check their shapes to ensure that their shapes conform to the requiremnts (You may need to transpose some of the matrices)
             # The final shape of deltas of layer l must be the same as that of the activations of layer l
             # Check if this is true
-            # delta[l] =
+            delta[l] = cost_function_prime(y_true, y_pred) * activation(pre_activations[-1], derivative=True)
         return deltas
 
     def backpropagate(self, deltas, pre_activations, activations):
@@ -255,8 +258,8 @@ class NeuralNetwork(object):
             # dW_temp depends on the activations of layer l-1 and the deltas of layer l
             # dB_temp depends only on the deltas of layer l
             # Again be careful of the dimensions and ensure that the dW matrix has the same shape as W
-            # dW =
-            # dB =
+            dW = np.dot(y_true, activation([l-1]).transpose)
+            dB = np.dot(self.weights[l + 1].transpose(), deltas[l + 1]) * activation(pre_activations[l], derivative=True)
             dW.append(dW_temp)
             db.append(np.expand_dims(db_temp.mean(axis=1), 1))
         return dW, db
@@ -371,10 +374,10 @@ class NeuralNetwork(object):
                 pass
                 # TODO
                 # Update the weights using the backpropagation algorithm implemented earlier
-                # W = W - learning_rate * derivatives (dW)
-                # b = b - learning_rate * derivatives (db)
-                # self.weights =
-                # self.biases =
+                W = W - learning_rate * derivatives (dW)
+                b = b - learning_rate * derivatives (db)
+                self.weights[i] = W
+                self.biases[i] = b
 
             history_train_losses.append(np.mean(train_losses))
             history_train_accuracies.append(np.mean(train_accuracies))
